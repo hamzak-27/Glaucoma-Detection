@@ -1,0 +1,192 @@
+{% extends 'detection/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Glaucoma Detection - Patient Records{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h4 mb-0">
+                    <i class="fas fa-history me-2"></i> Patient Records
+                </h2>
+            </div>
+            <div class="card-body">
+                {% if not patient %}
+                    <div class="text-center py-3 mb-4">
+                        <div class="display-icon mb-3">
+                            <i class="fas fa-user-circle fa-4x text-muted"></i>
+                        </div>
+                        <h3 class="h5">Access Your Records</h3>
+                        <p class="text-muted mb-4">Enter your email address to view your test history</p>
+                        
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form|crispy }}
+                                    <button type="submit" class="btn btn-primary mt-3 w-100">
+                                        <i class="fas fa-search me-1"></i> Find Records
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <a href="{% url 'home' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-upload me-1"></i> Upload New Image
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="patient-info mb-4">
+                        <h3 class="h5 mb-3">
+                            <i class="fas fa-user me-2"></i> {{ patient.name }}
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label">Email:</span>
+                                    <span class="info-value">{{ patient.email }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label">First Test:</span>
+                                    <span class="info-value">{{ patient.date_created|date:"F j, Y" }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if tests %}
+                        <h4 class="h6 mb-3">Test History ({{ tests.count }} records)</h4>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Result</th>
+                                        <th>Confidence</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for test in tests %}
+                                        <tr>
+                                            <td>{{ test.date_created|date:"M j, Y, g:i a" }}</td>
+                                            <td>
+                                                {% if test.status == 'completed' %}
+                                                    <span class="badge bg-success">Completed</span>
+                                                {% elif test.status == 'processing' %}
+                                                    <span class="badge bg-info">Processing</span>
+                                                {% elif test.status == 'pending' %}
+                                                    <span class="badge bg-warning text-dark">Pending</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Failed</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if test.status == 'completed' %}
+                                                    {% if test.is_glaucoma %}
+                                                        <span class="badge bg-danger">Positive</span>
+                                                    {% else %}
+                                                        <span class="badge bg-success">Negative</span>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <span class="text-muted">N/A</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if test.status == 'completed' %}
+                                                    {{ test.confidence_percent }}
+                                                {% else %}
+                                                    <span class="text-muted">N/A</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
+                                                {% if test.status == 'completed' %}
+                                                    <a href="{% url 'test_detail' test.id %}" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-eye"></i> View
+                                                    </a>
+                                                {% elif test.status == 'processing' or test.status == 'pending' %}
+                                                    <a href="{% url 'process_test' test.id %}" class="btn btn-sm btn-outline-info">
+                                                        <i class="fas fa-sync-alt"></i> Check
+                                                    </a>
+                                                    <form method="post" action="{% url 'cancel_test' test.id %}" class="d-inline">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger" 
+                                                                onclick="return confirm('Are you sure you want to cancel this test?')">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </form>
+                                                {% else %}
+                                                    <span class="text-muted">N/A</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'home' %}" class="btn btn-primary">
+                                <i class="fas fa-upload me-1"></i> Upload New Image
+                            </a>
+                            <a href="{% url 'records' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-search me-1"></i> Look Up Different Patient
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No test records found for this patient.
+                        </div>
+                        <div class="text-center mt-4">
+                            <a href="{% url 'home' %}" class="btn btn-primary">
+                                <i class="fas fa-upload me-1"></i> Upload Your First Image
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Information Panel -->
+        <div class="card shadow mt-4">
+            <div class="card-header bg-light">
+                <h3 class="h5 mb-0">Information for Patients</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="h6">About Glaucoma Tests</h4>
+                        <p>
+                            Our AI-based glaucoma detection system analyzes retinal fundus images to identify 
+                            signs of glaucoma. The system provides a confidence score that indicates the 
+                            likelihood of glaucoma presence.
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="h6">Understanding Your Results</h4>
+                        <ul class="small">
+                            <li><strong>Negative:</strong> No signs of glaucoma detected in the image</li>
+                            <li><strong>Positive:</strong> Potential signs of glaucoma detected</li>
+                            <li><strong>Confidence:</strong> Higher percentage indicates greater certainty in the diagnosis</li>
+                        </ul>
+                        <div class="alert alert-warning small mt-2">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            All results should be confirmed by a healthcare professional.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

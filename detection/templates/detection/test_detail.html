@@ -1,0 +1,228 @@
+{% extends 'detection/base.html' %}
+{% load static %}
+
+{% block title %}Test Result Details{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h2 class="h4 mb-0">
+                    <i class="fas fa-clipboard-list me-2"></i> Test Result Details
+                </h2>
+                <a href="{% url 'records' %}" class="btn btn-sm btn-light">
+                    <i class="fas fa-chevron-left me-1"></i> Back to Records
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Patient Information -->
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <div class="patient-card p-3 border rounded">
+                            <h3 class="h5 mb-3">Patient Information</h3>
+                            
+                            <div class="mb-3 text-center">
+                                <i class="fas fa-user-circle fa-4x text-primary"></i>
+                            </div>
+                            
+                            <div class="info-group">
+                                <div class="info-item">
+                                    <span class="info-label">Name:</span>
+                                    <span class="info-value">{{ test.patient.name }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Email:</span>
+                                    <span class="info-value">{{ test.patient.email }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Test Date:</span>
+                                    <span class="info-value">{{ test.date_created|date:"F j, Y, g:i a" }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Processing Time:</span>
+                                    <span class="info-value">{{ test.processing_time|floatformat:2 }} seconds</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <div class="diagnosis-badge {% if test.is_glaucoma %}badge-danger{% else %}badge-success{% endif %} w-100">
+                                    {% if test.is_glaucoma %}
+                                        <i class="fas fa-exclamation-circle me-2"></i> Glaucoma Detected
+                                    {% else %}
+                                        <i class="fas fa-check-circle me-2"></i> No Glaucoma Detected
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <div class="confidence-meter">
+                                    <div class="confidence-label d-flex justify-content-between">
+                                        <span>Confidence</span>
+                                        <span>{{ test.confidence_percent }}</span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar bg-{% if test.is_glaucoma %}danger{% else %}success{% endif %}" 
+                                             role="progressbar" 
+                                             style="width: {{ test.confidence_score }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Test Results -->
+                    <div class="col-md-8">
+                        <h3 class="h5 mb-3">Analysis Results</h3>
+                        
+                        <div class="result-images">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="image-card">
+                                        <div class="card-header bg-light">
+                                            <h4 class="h6 mb-0">Original Image</h4>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <img src="{{ test.image.url }}" alt="Original Fundus Image" class="img-fluid rounded">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="image-card">
+                                        <div class="card-header bg-light">
+                                            <h4 class="h6 mb-0">Analysis Visualization</h4>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            {% if test.result_image %}
+                                                <img src="{{ test.result_image.url }}" alt="Analysis Result" class="img-fluid rounded">
+                                            {% else %}
+                                                <div class="alert alert-warning m-3">
+                                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                                    Visualization not available
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recommendation Section -->
+                        <div class="recommendation-section mt-4">
+                            <h3 class="h5 mb-3">Medical Recommendations</h3>
+                            <div class="card">
+                                <div class="card-body">
+                                    {% if test.is_glaucoma %}
+                                        <div class="alert alert-danger">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            <strong>Action Required:</strong> Signs of glaucoma detected in the analysis.
+                                        </div>
+                                        <p>Based on the positive result, we recommend:</p>
+                                        <ul>
+                                            <li>Schedule an appointment with an ophthalmologist within the next 2-4 weeks</li>
+                                            <li>Bring this test result to your appointment</li>
+                                            <li>Discuss treatment options with your eye care specialist</li>
+                                            <li>Schedule regular follow-up examinations to monitor your condition</li>
+                                        </ul>
+                                    {% else %}
+                                        <div class="alert alert-success">
+                                            <i class="fas fa-check-circle me-2"></i>
+                                            <strong>Good News:</strong> No signs of glaucoma detected in this analysis.
+                                        </div>
+                                        <p>Even with negative results, we recommend:</p>
+                                        <ul>
+                                            <li>Continue regular eye check-ups (annually for those over 40)</li>
+                                            <li>Be aware of your risk factors for glaucoma</li>
+                                            <li>Maintain healthy lifestyle habits that promote eye health</li>
+                                            <li>If you experience any vision changes, consult your eye doctor promptly</li>
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'home' %}" class="btn btn-primary">
+                        <i class="fas fa-upload me-1"></i> New Analysis
+                    </a>
+                    <div>
+                        <button class="btn btn-outline-secondary me-2" onclick="window.print()">
+                            <i class="fas fa-print me-1"></i> Print Results
+                        </button>
+                        <a href="{% url 'records' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-history me-1"></i> All Records
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Medical Information -->
+        <div class="card shadow mt-4">
+            <div class="card-header bg-light">
+                <h3 class="h5 mb-0">About Glaucoma</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="h6">What is Glaucoma?</h4>
+                        <p>
+                            Glaucoma is a group of eye conditions that damage the optic nerve, often due to
+                            abnormally high pressure in the eye. It's one of the leading causes of blindness
+                            for people over 60, but it can occur at any age.
+                        </p>
+                        <p>
+                            Many forms of glaucoma have no warning signs, and the effect is so gradual that
+                            you may not notice a change in vision until the condition is at an advanced stage.
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="h6">Risk Factors</h4>
+                        <ul>
+                            <li>High intraocular pressure</li>
+                            <li>Age over 60</li>
+                            <li>Family history of glaucoma</li>
+                            <li>Medical conditions such as diabetes or heart disease</li>
+                            <li>Previous eye injuries</li>
+                            <li>Long-term use of corticosteroid medications</li>
+                            <li>Thin corneas</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="disclaimer-section mt-3 p-3 bg-light rounded">
+                    <p class="small text-muted mb-0">
+                        <strong>Medical Disclaimer:</strong> This automated analysis is intended as a screening tool
+                        only and does not constitute medical advice or a diagnosis. The results should be reviewed by
+                        a qualified healthcare professional. Early detection and treatment of glaucoma can help
+                        prevent vision loss.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+@media print {
+    .navbar, footer, .btn, form {
+        display: none !important;
+    }
+    
+    .card {
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    .container {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+</style>
+{% endblock %}
