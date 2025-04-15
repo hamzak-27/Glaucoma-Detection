@@ -9,7 +9,12 @@
             "use": "@vercel/python",
             "config": {
                 "runtime": "python3.9",
-                "maxDuration": 10
+                "maxDuration": 10,
+                "includeFiles": [
+                    "glaucoma_detector/**",
+                    "detection/**",
+                    "requirements.txt"
+                ]
             }
         }
     ],
@@ -23,7 +28,7 @@
             "dest": "/media/$1"
         },
         {
-            "src": "/admin/.*",
+            "src": "/test/",
             "dest": "glaucoma_detector/wsgi.py"
         },
         {
@@ -34,6 +39,6 @@
     "env": {
         "DJANGO_SETTINGS_MODULE": "glaucoma_detector.settings",
         "PYTHONPATH": ".",
-        "DJANGO_DEBUG": "False"
+        "DJANGO_DEBUG": "True"  # Temporarily enable debug for troubleshooting
     }
 } 
