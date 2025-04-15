@@ -1,0 +1,257 @@
+/* 
+ * Glaucoma Detection System - Main Stylesheet
+ */
+
+/* ===== General Styles ===== */
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    font-weight: 600;
+    padding: 12px 20px;
+}
+
+.shadow {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ===== Home Page Styles ===== */
+.info-panel {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    height: 100%;
+}
+
+.upload-instructions li {
+    margin-bottom: 8px;
+}
+
+.upload-area {
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    transition: all 0.3s;
+    background-color: #f8f9fa;
+}
+
+.upload-area.highlight {
+    border-color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+.upload-icon {
+    font-size: 48px;
+    color: #6c757d;
+}
+
+.img-preview {
+    max-height: 200px;
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+/* Hide the default file input appearance */
+input[type="file"] {
+    margin-top: 10px;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+/* Steps section */
+.step {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    height: 100%;
+    transition: all 0.3s;
+}
+
+.step:hover {
+    background-color: #e9ecef;
+    transform: translateY(-5px);
+}
+
+.step-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 24px;
+}
+
+/* ===== Results Page Styles ===== */
+.result-image-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.result-image-container img {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.result-summary {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    height: 100%;
+}
+
+.result-details {
+    margin-bottom: 20px;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+.result-label {
+    font-weight: 500;
+    color: #6c757d;
+}
+
+.diagnosis-badge {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.badge-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.badge-danger {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.confidence-meter {
+    margin-top: 15px;
+}
+
+.confidence-label {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+/* ===== Records Page Styles ===== */
+.display-icon {
+    color: #6c757d;
+}
+
+.patient-info {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.info-group {
+    margin-top: 15px;
+}
+
+.info-item {
+    margin-bottom: 10px;
+}
+
+.info-label {
+    font-weight: 500;
+    color: #6c757d;
+    width: 120px;
+    display: inline-block;
+}
+
+/* ===== Image Cards ===== */
+.image-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+}
+
+.image-card .card-header {
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+}
+
+.image-card .card-body {
+    padding: 10px;
+}
+
+/* ===== Patient Card ===== */
+.patient-card {
+    height: 100%;
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 767.98px) {
+    .card-header {
+        padding: 10px 15px;
+    }
+    
+    .info-label {
+        width: auto;
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    .info-value {
+        display: block;
+    }
+    
+    .result-item {
+        flex-direction: column;
+    }
+}
+
+/* ===== Print Styles ===== */
+@media print {
+    body {
+        background-color: white;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #dee2e6 !important;
+    }
+    
+    .navbar, footer, .btn {
+        display: none !important;
+    }
+}
