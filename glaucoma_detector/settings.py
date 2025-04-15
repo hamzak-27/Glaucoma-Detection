@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-fallback-key-for-de
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']  # Update this with your Vercel domain after deployment
+ALLOWED_HOSTS = ['https://glaucoma-detection-gamma.vercel.app/']  # Update this with your Vercel domain after deployment
 
 # Application definition
 INSTALLED_APPS = [
