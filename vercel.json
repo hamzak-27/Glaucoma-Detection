@@ -1,5 +1,9 @@
 {
     "version": 2,
+    "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput",
+    "installCommand": "pip install -r requirements.txt",
+    "framework": "django",
+    "outputDirectory": "staticfiles",
     "builds": [
         {
             "src": "glaucoma_detector/wsgi.py",
