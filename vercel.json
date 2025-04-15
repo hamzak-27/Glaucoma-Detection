@@ -1,5 +1,7 @@
 {
     "version": 2,
+    "buildCommand": "python3 -m pip install -r requirements.txt",
+    "outputDirectory": "staticfiles",
     "builds": [
         {
             "src": "vercel-build.sh",
@@ -10,7 +12,10 @@
         },
         {
             "src": "glaucoma_detector/wsgi.py",
-            "use": "@vercel/python"
+            "use": "@vercel/python",
+            "config": {
+                "runtime": "python3.9"
+            }
         }
     ],
     "routes": [
