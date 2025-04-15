@@ -5,12 +5,8 @@
     "outputDirectory": "staticfiles",
     "builds": [
         {
-            "src": "glaucoma_detector/wsgi.py",
-            "use": "@vercel/python",
-            "config": {
-                "runtime": "python3.9",
-                "maxDuration": 10
-            }
+            "src": "api/index.py",
+            "use": "@vercel/python"
         }
     ],
     "routes": [
@@ -24,7 +20,7 @@
         },
         {
             "src": "/(.*)",
-            "dest": "glaucoma_detector/wsgi.py"
+            "dest": "api/index.py"
         }
     ],
     "env": {
