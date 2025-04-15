@@ -1,21 +1,9 @@
 {
     "version": 2,
-    "buildCommand": "python3 -m pip install -r requirements.txt",
-    "outputDirectory": "staticfiles",
     "builds": [
         {
-            "src": "vercel-build.sh",
-            "use": "@vercel/static-build",
-            "config": {
-                "distDir": "staticfiles"
-            }
-        },
-        {
             "src": "glaucoma_detector/wsgi.py",
-            "use": "@vercel/python",
-            "config": {
-                "runtime": "python3.9"
-            }
+            "use": "@vercel/python"
         }
     ],
     "routes": [
@@ -31,9 +19,5 @@
             "src": "/(.*)",
             "dest": "glaucoma_detector/wsgi.py"
         }
-    ],
-    "env": {
-        "DJANGO_SETTINGS_MODULE": "glaucoma_detector.settings",
-        "PYTHONPATH": "."
-    }
+    ]
 } 
